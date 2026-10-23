@@ -1,0 +1,40 @@
+services:
+  arca:
+    build:
+      context: .
+      target: server
+    image: arca-server:1.0.0
+    restart: unless-stopped
+    environment:
+      ARCA_PASSWORD: ${ARCA_PASSWORD:?defina ARCA_PASSWORD no arquivo .env}
+      ARCA_APPENDFSYNC: ${ARCA_APPENDFSYNC:-everysec}
+      ARCA_IO_THREADS: ${ARCA_IO_THREADS:-2}
+    ports:
+      - "127.0.0.1:${ARCA_PORT:-7379}:7379"
+    volumes:
+      - dados:/dados
+    healthcheck:
+      test: ["CMD", "arca-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  gateway:
+    build:
+      context: .
+      target: gateway
+    image: arca-gateway:1.0.0
+    restart: unless-stopped
+    depends_on:
+      arca:
+        condition: service_healthy
+    environment:
+      ARCA_ADDR: arca:7379
+      ARCA_PASSWORD: ${ARCA_PASSWORD}
+      ARCA_SEED: ${ARCA_SEED:-true}
+      ARCA_SESSION_HOURS: ${ARCA_SESSION_HOURS:-12}
+    ports:
+      - "${ARCA_HTTP_PORT:-8080}:8080"
+
+volumes:
+  dados:

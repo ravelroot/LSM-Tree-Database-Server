@@ -1,0 +1,15 @@
+.env
+build/
+cmake-build-*/
+dados/
+checkpoints/
+exemplo-embutido/
+web/node_modules/
+web/dist/
+gateway/arca-gateway
+gateway/arca-gateway.exe
+*.exe
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

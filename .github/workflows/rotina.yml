@@ -1,0 +1,60 @@
+name: Rotina
+
+on:
+  schedule:
+    - cron: "17 12 * * *"
+    - cron: "43 16 * * *"
+    - cron: "11 21 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rotina
+  cancel-in-progress: false
+
+jobs:
+  registrar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Registrar
+        env:
+          TZ: America/Sao_Paulo
+          OWNER: ${{ github.repository_owner }}
+          OWNER_ID: ${{ github.repository_owner_id }}
+          AGENDA: ${{ github.event.schedule }}
+        run: |
+          case "$AGENDA" in
+            "17 12 * * *") TURNO="manhã" ;;
+            "43 16 * * *") TURNO="tarde" ;;
+            "11 21 * * *") TURNO="noite" ;;
+            *) TURNO="manual-$(date +%H%M)" ;;
+          esac
+          HOJE=$(date +%Y-%m-%d)
+          ARQUIVO=.github/rotina/registro.txt
+          mkdir -p .github/rotina
+          git config user.name "$OWNER"
+          git config user.email "${OWNER_ID}+${OWNER}@users.noreply.github.com"
+          if grep -q "^$HOJE $TURNO " "$ARQUIVO" 2>/dev/null; then
+            echo "Turno $TURNO de $HOJE já registrado."
+            exit 0
+          fi
+          echo "$HOJE $TURNO $(date +%H:%M)" >> "$ARQUIVO"
+          tail -n 90 "$ARQUIVO" > "$ARQUIVO.tmp" && mv "$ARQUIVO.tmp" "$ARQUIVO"
+          git add "$ARQUIVO"
+          git commit -m "Registro de $(date +%d/%m/%Y) ($TURNO)"
+          for tentativa in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((tentativa * 15))
+            git pull --rebase origin main
+          done
+          echo "Não foi possível enviar o registro depois de 3 tentativas."
+          exit 1
