@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/logo-branco.png" width="200" alt="Arca">
+  <img src="docs/images/logo-quadrado.png" width="200" alt="Arca">
 </p>
 
 <h1 align="center">Arca<br><sub><sup><sup><sub>Copyright (©) 2026 Erik Pimenta</sub></sup></sup></sub></h1>
