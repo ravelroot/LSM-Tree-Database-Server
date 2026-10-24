@@ -50,7 +50,9 @@ export function Login({ onLogin }: { onLogin: (u: User) => void }) {
       </div>
       <form className="login-card" onSubmit={submit}>
         <div className="login-brand">
-          <Logo size={44} />
+          <span className="brand-mark brand-mark-lg">
+            <Logo size={30} />
+          </span>
           <div>
             <h1>Arca</h1>
             <p>Painel do banco de dados</p>

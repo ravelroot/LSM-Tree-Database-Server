@@ -13,7 +13,7 @@
 
 namespace arca {
 
-inline constexpr const char* kVersion = "1.0.0";
+inline constexpr const char* kVersion = "1.1.0";
 
 class Snapshot {
  public:

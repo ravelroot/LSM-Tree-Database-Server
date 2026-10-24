@@ -1,5 +1,5 @@
 import { api } from '../api'
-import { LineChart, Meter, Sparkline } from '../components/Charts'
+import { LineChart, Meter } from '../components/Charts'
 import { LevelBars } from '../components/Levels'
 import { Badge, Empty, ErrorBox, KV, Loading, Panel, Stat } from '../components/ui'
 import { bytes, dec, duration, ms, num, pct, ago } from '../format'
@@ -19,7 +19,7 @@ export function Overview() {
   const keyspaceRatio = data.commands.keyspace_hits + data.commands.keyspace_misses > 0 ? data.commands.keyspace_hits / (data.commands.keyspace_hits + data.commands.keyspace_misses) : 0
 
   return (
-    <div className="page-grid">
+    <>
       <div className="server-strip">
         <span>
           <Badge tone="accent">v{data.server.version}</Badge>
@@ -36,8 +36,9 @@ export function Overview() {
         {e.compacting ? <Badge tone="warn">compactando</Badge> : null}
       </div>
 
+      <div className="page-grid">
+
       <div className="stats-row">
-        <Stat label="Operações por segundo" value={dec(ops)} hint={<Sparkline values={history.map((m) => m.ops_per_sec)} />} />
         <Stat label="Clientes conectados" value={num(latest?.clients ?? data.clients.connected)} hint={`${num(data.clients.total)} conexões desde a partida`} />
         <Stat label="Chaves e linhas (estimativa)" value={num(e.estimated_keys)} hint={`${num(data.tables)} ${data.tables === 1 ? 'tabela' : 'tabelas'}`} />
         <Stat label="Dados em SSTables" value={bytes(latest?.sst_bytes ?? e.sst_bytes)} hint={`${num(latest?.sst_files ?? e.sst_files)} arquivos`} />
@@ -50,7 +51,17 @@ export function Overview() {
         <Stat label="Acerto do cache de blocos" value={pct(hitRatio)} hint={<Meter value={e.block_cache_bytes} max={e.block_cache_capacity} label="Uso do cache" />} />
       </div>
 
-      <Panel title="Leituras e escritas por segundo" className="span-2">
+      <Panel title="Leituras e escritas por segundo" className="span-2 panel-lid">
+        <div className="lid-value">
+          <span className="lid-label">Operações por segundo agora</span>
+          <strong className="lid-number">
+            {dec(ops)}
+            <small>ops/s</small>
+          </strong>
+          <span className="lid-sub">
+            <b>{num(data.commands.reads)}</b> leituras e <b>{num(data.commands.writes)}</b> escritas desde a partida
+          </span>
+        </div>
         <LineChart
           series={[
             { name: 'Leituras', values: history.map((m) => m.reads_per_sec), tone: 'a' },
@@ -109,7 +120,7 @@ export function Overview() {
         />
       </Panel>
 
-      <Panel title="Compactações recentes" className="span-2" flush>
+      <Panel title="Compactações recentes" className="span-3" flush>
         {data.recent_compactions.length === 0 ? (
           <Empty title="Nenhuma compactação ainda">Elas aparecem aqui quando um nível passa do limite ou quando você compacta pela tela Armazenamento.</Empty>
         ) : (
@@ -149,6 +160,7 @@ export function Overview() {
           </div>
         )}
       </Panel>
-    </div>
+      </div>
+    </>
   )
 }

@@ -157,7 +157,7 @@ func buildOpenAPI() map[string]any {
 		"openapi": "3.1.0",
 		"info": map[string]any{
 			"title":       "Arca Gateway",
-			"version":     "1.0.0",
+			"version":     "1.1.0",
 			"description": "API HTTP do painel do Arca. Todas as rotas respondem JSON e, exceto login, saúde e esta especificação, exigem Authorization: Bearer <token>.",
 			"license":     map[string]any{"name": "MIT"},
 		},

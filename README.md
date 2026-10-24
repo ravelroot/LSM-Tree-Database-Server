@@ -20,7 +20,7 @@
 > **Banco de dados:** [`Banco-de-Dados-Arca.pdf`](Banco-de-Dados-Arca.pdf) descreve a arquitetura de armazenamento que a aplicação segue: LSM-Tree, formato do WAL, das SSTables e do MANIFEST, codificação das chaves e das linhas, compactação e recuperação.
 
 <p align="center">
-  <img src="docs/images/tela-visao-geral.png" alt="Visão geral do painel com tráfego, memtable e níveis da LSM-Tree">
+  <img src="docs/images/tela-visao-geral.png" alt="Visão geral: as operações por segundo na tampa escura e os indicadores nos compartimentos da caixa">
 </p>
 
 ## O que a Arca faz
@@ -34,6 +34,7 @@
 - **Compatível com o Redis:** fala RESP2, então `redis-cli` e bibliotecas de Redis funcionam. Strings, TTL, contadores, `SCAN`, `MULTI/EXEC`, `INFO`, `SLOWLOG`, `CLIENT LIST`.
 - **Tabelas com SQL:** `CREATE TABLE`, índices secundários, `INSERT`, `SELECT` com `WHERE`, `GROUP BY`, `ORDER BY`, agregações e `EXPLAIN`, `UPDATE`, `DELETE`, `ALTER TABLE ADD COLUMN`, tudo gravado na mesma LSM-Tree.
 - **Painel web e API:** gateway em Go com API REST, eventos em tempo real (SSE), papéis e auditoria; painel em React para ver níveis, SSTables, chaves, tabelas e rodar SQL.
+- **Identidade "caixa única":** o painel segue a identidade visual do [Bento](https://github.com/ravelroot/Data-Driven-Admin-Panel). Menu, cabeçalho e títulos ficam impressos no fundo, sem bordas; na visão geral, os blocos dividem paredes finas dentro de uma única caixa, e o bloco principal, com as operações por segundo, é o único escuro. Paleta `#FFFFFF` · `#4D4B4B` · `#000000` · `#333232` · `#BAB7B6`, títulos e números em Bricolage Grotesque fina e condensada, textos em Instrument Sans e código em IBM Plex Mono. Cor só onde informa: status como um ponto de cor e os níveis da LSM-Tree do cinza claro (L0) ao preto (L6).
 - **Ferramentas:** `arca-cli` (console com SQL), `arca-bench` (carga), `arca-inspect` (abre SST, WAL e MANIFEST) e uma biblioteca para embutir o motor no seu programa.
 
 ## Arquitetura
@@ -255,6 +256,7 @@ O exemplo completo está em [`examples/embedded.cpp`](examples/embedded.cpp).
 | Trocar o formato das SSTables | `src/table/` (blocos, índice, Bloom e rodapé) |
 | Nova rota da API | `gateway/internal/api/` |
 | Nova tela | `web/src/pages/` e a lista de páginas em `web/src/App.tsx` |
+| Cores, fontes e identidade visual | Tokens no topo de `web/src/styles.css` (claro e escuro) e as classes `page-grid`, `stats-row` e `panel-lid` |
 
 ## Segurança
 
@@ -308,4 +310,4 @@ O workflow [`ci.yml`](.github/workflows/ci.yml) compila com GCC, Clang e MSVC, r
 
 ## Licença
 
-[MIT](LICENSE). Use, copie, altere e distribua à vontade. As fontes IBM Plex Sans e IBM Plex Mono do painel são distribuídas sob a [SIL Open Font License](web/OFL.txt).
+[MIT](LICENSE). Use, copie, altere e distribua à vontade. As fontes Instrument Sans, Bricolage Grotesque e IBM Plex Mono do painel são distribuídas sob a [SIL Open Font License](web/OFL.txt).

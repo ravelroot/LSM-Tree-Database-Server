@@ -100,10 +100,12 @@ function Shell({ user, theme, toggleTheme, onLogout, onUser }: { user: User; the
       <div className={`shell${menu ? ' menu-open' : ''}`}>
         <aside className="side">
           <div className="brand">
-            <Logo size={30} />
+            <span className="brand-mark">
+              <Logo size={22} />
+            </span>
             <div>
               <strong>Arca</strong>
-              <span>LSM-Tree em C++</span>
+              <span>Banco de dados LSM-Tree</span>
             </div>
           </div>
           <nav aria-label="Navegação principal">
@@ -141,14 +143,22 @@ function Shell({ user, theme, toggleTheme, onLogout, onUser }: { user: User; the
               <Icon name="menu" />
             </button>
             <div className="top-title">
-              <h1>{def.title}</h1>
-              <p>{def.description}</p>
+              <h1>
+                <span>Arca</span>
+                <Icon name="chevron" size={14} />
+                <b>{def.label}</b>
+              </h1>
             </div>
             <span className="spacer" />
             <StreamPill />
             <IconButton icon={theme === 'dark' ? 'sun' : 'moon'} label={theme === 'dark' ? 'Tema claro' : 'Tema escuro'} onClick={toggleTheme} />
           </header>
           <main className="content" key={def.id}>
+            <div className="page-head">
+              <p className="page-over">{def.group}</p>
+              <h2 className="page-title">{def.title}</h2>
+              <p className="page-desc">{def.description}</p>
+            </div>
             {def.id === 'visao-geral' ? <Overview /> : null}
             {def.id === 'chaves' ? <Keys /> : null}
             {def.id === 'tabelas' ? <Tables /> : null}
@@ -194,7 +204,9 @@ export function App() {
   if (checking) {
     return (
       <div className="boot">
-        <Logo size={40} />
+        <span className="brand-mark">
+          <Logo size={24} />
+        </span>
         <Loading label="Abrindo o painel…" />
       </div>
     )
